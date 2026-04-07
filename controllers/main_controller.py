@@ -9,7 +9,7 @@ from PyQt5.QtCore import QObject
 from PyQt5.QtWidgets import QFileDialog, QMainWindow, QMessageBox
 
 from controllers.matching_controller import MatchingImagesController
-
+from controllers.harris_controller import HarrisController
 
 class AppController(QObject):
     """Top-level app controller that loads main.ui and wires tab controllers."""
@@ -25,6 +25,9 @@ class AppController(QObject):
         # Initialize tab-specific controllers
         self.matching_controller = MatchingImagesController(self.window)
         self.matching_controller.bind_ui(self.window)
+
+        self.harris_controller = HarrisController(self.window)
+        self.harris_controller.bind_ui(self.window)
 
         # Connect menu actions
         self.window.actionOpenImage.triggered.connect(self._open_image_for_active_tab)
