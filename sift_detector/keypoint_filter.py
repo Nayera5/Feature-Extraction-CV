@@ -40,8 +40,8 @@ class Keypoint:
 def filter_keypoints(
     raw_keypoints: list[RawKeypoint],
     dog_pyramid: list[list[np.ndarray]],
-    contrast_threshold: float = 0.04,
-    edge_threshold: float = 10.0,
+    contrast_threshold: float = 0.08,
+    edge_threshold: float = 6.0,
     sigma: float = 1.6,
     scales_per_octave: int = 3,
 ) -> tuple[list[Keypoint], dict]:

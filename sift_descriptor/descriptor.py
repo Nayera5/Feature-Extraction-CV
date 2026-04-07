@@ -62,6 +62,16 @@ def normalize(desc):
 
     return desc
 
+# def normalize(desc):
+#     norm = np.linalg.norm(desc)
+#     if norm > 0:
+#         desc = desc / norm
+#     desc = np.clip(desc, 0, 0.2)      # suppress large values
+#     norm2 = np.linalg.norm(desc)      # renormalize after clipping
+#     if norm2 > 0:
+#         desc = desc / norm2
+#     return desc
+
 
 def generate_descriptors(keypoints, gaussian_pyramid):
     start = time.time()

@@ -3,10 +3,11 @@
 from __future__ import annotations
 
 from pathlib import Path
+import time
 
 import cv2
 import numpy as np
-from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot, QThread, Qt
+from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot, QThread
 from PyQt5.QtGui import QImage, QPixmap
 from PyQt5.QtWidgets import QFileDialog, QMainWindow
 
@@ -14,12 +15,30 @@ from controllers.SIFT_controller import SIFTController
 
 
 class MatchingWorker(QThread):
-    """Background worker thread for matching operations."""
+    """
+    Background thread: runs the full SIFT + matching pipeline.
+
+    Flow:
+        run() image1  →  keypoints1, descriptors1
+        run() image2  →  keypoints2, descriptors2
+        match_descriptors(desc1, desc2, technique, ratio_thresh)  →  matches
+
+    SIFTController.run() is the single extraction entry point.
+    SIFTController.match_descriptors() is the single matching entry point.
+    No other controller method is called here.
+    """
 
     finished = pyqtSignal(dict)
     error = pyqtSignal(str)
 
-    def __init__(self, sift_controller, image1, image2, technique: str, ratio_thresh: float):
+    def __init__(
+        self,
+        sift_controller: SIFTController,
+        image1: np.ndarray,
+        image2: np.ndarray,
+        technique: str,
+        ratio_thresh: float,
+    ):
         super().__init__()
         self.sift_controller = sift_controller
         self.image1 = image1
@@ -29,38 +48,47 @@ class MatchingWorker(QThread):
 
     def run(self):
         try:
-            result1 = self.sift_controller.run(self.image1)
-            result2 = self.sift_controller.run(self.image2)
+            t0 = time.perf_counter()
 
+            # Step 1 — extract features independently for each image
+            t_extract_start = time.perf_counter()
+            result1 = self.sift_controller.run(cv2.cvtColor(self.image1, cv2.COLOR_RGB2BGR))
+            result2 = self.sift_controller.run(cv2.cvtColor(self.image2, cv2.COLOR_RGB2BGR))
+            extraction_sec = time.perf_counter() - t_extract_start
+
+            keypoints1   = result1["filtered_keypoints"]
+            keypoints2   = result2["filtered_keypoints"]
             descriptors1 = result1["descriptors"]
             descriptors2 = result2["descriptors"]
-            keypoints1 = result1["filtered_keypoints"]
-            keypoints2 = result2["filtered_keypoints"]
 
+            # Step 2 — match descriptors (single entry point)
+            t_match_start = time.perf_counter()
             matches = self.sift_controller.match_descriptors(
                 descriptors1,
                 descriptors2,
                 technique=self.technique,
                 ratio_thresh=self.ratio_thresh,
             )
+            matching_sec = time.perf_counter() - t_match_start
+            total_sec = time.perf_counter() - t0
 
             self.finished.emit({
-                "success": True,
-                "keypoints1": keypoints1,
-                "keypoints2": keypoints2,
-                "descriptors1": descriptors1,
-                "descriptors2": descriptors2,
-                "matches": matches,
-                "num_matches": len(matches),
+                "keypoints1":     keypoints1,
+                "keypoints2":     keypoints2,
+                "matches":        matches,
+                "num_matches":    len(matches),
                 "num_keypoints1": len(keypoints1),
                 "num_keypoints2": len(keypoints2),
+
+                "total_sec": total_sec,
             })
+
         except Exception as e:
             self.error.emit(str(e))
 
 
 class MatchingImagesController(QObject):
-    """Controller for image matching functionality."""
+    """Controller for the Matching Images tab."""
 
     status_message = pyqtSignal(str)
     error_occurred = pyqtSignal(str)
@@ -69,34 +97,32 @@ class MatchingImagesController(QObject):
         super().__init__(parent)
         self.window = parent
         self.sift_controller = SIFTController(use_fast_extrema=False)
+        self.match_viz_min_width = 600
 
-        # State
-        self.image1_array = None
-        self.image2_array = None
-        self.current_matches = None
-        self.current_keypoints1 = None
-        self.current_keypoints2 = None
-        self._worker = None
+        # Runtime state
+        self.image1_array:       np.ndarray | None = None
+        self.image2_array:       np.ndarray | None = None
+        self.current_matches:    list | None = None
+        self.current_keypoints1  = None
+        self.current_keypoints2  = None
+        self._worker:            MatchingWorker | None = None
 
     # ------------------------------------------------------------------
-    # UI wiring
+    # UI wiring — connect signals only, never touch widget geometry
     # ------------------------------------------------------------------
 
     def bind_ui(self, window: QMainWindow):
-        """Bind UI elements to controller methods.
-        
-        All widget sizes/properties are defined in main.ui.
-        This method only connects signals — it never mutates widget geometry.
-        """
         self.window = window
 
-        # Combo box items are defined in main.ui; never add them here.
-        # Just ensure a valid default selection.
+        # Combo box items are defined in main.ui — never add them here
         self.window.matchingTechniqueCombo.setCurrentIndex(0)
 
         self.window.matchingLoadImage1Btn.clicked.connect(self.load_image_1)
         self.window.matchingLoadImage2Btn.clicked.connect(self.load_image_2)
-        self.window.matchingRunBtn.clicked.connect(self.match_images)
+        self.window.matchingRunBtn.clicked.connect(self.run_matching)
+        
+        # Connect spinbox value change to redraw matches (if results exist)
+        self.window.matchingNumDisplaySpin.valueChanged.connect(self._on_num_display_changed)
 
         self._update_run_button()
 
@@ -114,15 +140,13 @@ class MatchingImagesController(QObject):
         return path
 
     def _load_image(self, slot: int):
-        """Generic loader for either image slot (1 or 2)."""
         path = self._pick_image()
         if not path:
             return
-
         try:
             raw = cv2.imread(path)
             if raw is None:
-                raise ValueError("Could not decode image file")
+                raise ValueError("Could not decode image file.")
             image_rgb = cv2.cvtColor(raw, cv2.COLOR_BGR2RGB)
 
             if slot == 1:
@@ -147,49 +171,56 @@ class MatchingImagesController(QObject):
         self._load_image(2)
 
     # ------------------------------------------------------------------
-    # Display helpers — no hardcoded pixel sizes; use the label's actual size
+    # Display helpers — sizes come from the label's actual geometry
     # ------------------------------------------------------------------
 
     @staticmethod
     def _fit_image_to_label(label, image_rgb: np.ndarray) -> QPixmap:
-        """Scale image_rgb to fit inside label while preserving aspect ratio."""
-        lw = label.width() or 400   # fallback if layout not yet realized
+        """Scale image_rgb to fit label dimensions, preserving aspect ratio."""
+        lw = label.width()  or 400
         lh = label.height() or 280
 
         h, w = image_rgb.shape[:2]
-        scale = min(lw / w, lh / h, 1.0)   # never upscale beyond native size
+        scale = min(lw / w, lh / h, 1.0)   # never upscale past native resolution
         if scale < 1.0:
-            w, h = int(w * scale), int(h * scale)
+            w = int(w * scale)
+            h = int(h * scale)
             image_rgb = cv2.resize(image_rgb, (w, h), interpolation=cv2.INTER_AREA)
 
         q_img = QImage(image_rgb.data, w, h, 3 * w, QImage.Format_RGB888)
         return QPixmap.fromImage(q_img)
 
     def _display_preview(self, label, image_rgb: np.ndarray):
-        """Show a scaled preview inside a QLabel."""
         try:
-            pixmap = self._fit_image_to_label(label, image_rgb)
-            label.setPixmap(pixmap)
+            label.setPixmap(self._fit_image_to_label(label, image_rgb))
         except Exception as e:
             print(f"[preview] {e}")
 
     def _display_image_in_label(self, label, image_rgb: np.ndarray):
-        """Show the full visualization image inside a QLabel."""
         try:
-            pixmap = self._fit_image_to_label(label, image_rgb)
+            h, w = image_rgb.shape[:2]
+            q_img = QImage(image_rgb.data, w, h, 3 * w, QImage.Format_RGB888).copy()
+            pixmap = QPixmap.fromImage(q_img)
             label.setPixmap(pixmap)
+            label.resize(pixmap.size())
         except Exception as e:
             print(f"[visualization] {e}")
 
     # ------------------------------------------------------------------
-    # Matching
+    # Matching — kicks off the worker thread
     # ------------------------------------------------------------------
 
     def _update_run_button(self):
-        both = self.image1_array is not None and self.image2_array is not None
-        self.window.matchingRunBtn.setEnabled(both)
+        both_loaded = self.image1_array is not None and self.image2_array is not None
+        self.window.matchingRunBtn.setEnabled(both_loaded)
 
-    def match_images(self):
+    def _on_num_display_changed(self):
+        """Redraw matches when user changes the display count spinner."""
+        if self.current_matches is not None:
+            self._draw_matches()
+
+    def run_matching(self):
+        """Validate inputs and launch the background MatchingWorker."""
         if self.image1_array is None or self.image2_array is None:
             self.error_occurred.emit("Both images must be loaded before matching.")
             return
@@ -198,7 +229,6 @@ class MatchingImagesController(QObject):
             self.status_message.emit("Matching already in progress…")
             return
 
-        # Read technique from combo box (items come from .ui, not from code)
         technique = self.window.matchingTechniqueCombo.currentText().lower().strip()
         if technique not in ("ssd", "ncc"):
             self.error_occurred.emit(f"Unknown technique '{technique}'. Expected SSD or NCC.")
@@ -220,21 +250,28 @@ class MatchingImagesController(QObject):
         self._worker.error.connect(self._on_matching_error)
         self._worker.start()
 
+    # ------------------------------------------------------------------
+    # Worker callbacks
+    # ------------------------------------------------------------------
+
     @pyqtSlot(dict)
     def _on_matching_finished(self, result: dict):
         try:
-            self.current_matches = result["matches"]
+            self.current_matches    = result["matches"]
             self.current_keypoints1 = result["keypoints1"]
             self.current_keypoints2 = result["keypoints2"]
 
             self.window.matchingStatsLbl.setText(
                 f"Keypoints Image 1: {result['num_keypoints1']}\n"
                 f"Keypoints Image 2: {result['num_keypoints2']}\n"
-                f"Matches Found:     {result['num_matches']}"
+                f"Matches Found:     {result['num_matches']}\n"
+                f"Total Time:        {result['total_sec']:.3f} s"
+            )
+            self._draw_matches()
+            self.status_message.emit(
+                f"Done: {result['num_matches']} matches in {result['total_sec']:.3f}s."
             )
 
-            self._display_matches()
-            self.status_message.emit(f"Done — {result['num_matches']} matches found.")
         except Exception as e:
             self.error_occurred.emit(f"Result processing error: {e}")
         finally:
@@ -249,8 +286,8 @@ class MatchingImagesController(QObject):
     # Visualization
     # ------------------------------------------------------------------
 
-    def _display_matches(self):
-        """Draw matched keypoints on a side-by-side image and show it."""
+    def _draw_matches(self):
+        """Render side-by-side images with keypoint circles and match lines."""
         if not self.current_matches:
             self.window.matchingVisualizationHost.setText("No matches found.")
             return
@@ -259,10 +296,11 @@ class MatchingImagesController(QObject):
             img1 = cv2.cvtColor(self.image1_array, cv2.COLOR_RGB2BGR)
             img2 = cv2.cvtColor(self.image2_array, cv2.COLOR_RGB2BGR)
 
-            # Pad shorter image vertically so hstack works cleanly
             h1, w1 = img1.shape[:2]
             h2, w2 = img2.shape[:2]
-            max_h = max(h1, h2)
+            max_h  = max(h1, h2)
+
+            # Pad the shorter image so hstack produces a clean rectangle
             if h1 < max_h:
                 img1 = cv2.copyMakeBorder(img1, 0, max_h - h1, 0, 0, cv2.BORDER_CONSTANT)
             if h2 < max_h:
@@ -270,7 +308,11 @@ class MatchingImagesController(QObject):
 
             combined = np.hstack([img1, img2])
 
-            for idx_a, idx_b in self.current_matches[:20]:
+            # Get user-selected number of matches to display
+            num_to_display = self.window.matchingNumDisplaySpin.value()
+            num_to_show = min(num_to_display, len(self.current_matches))
+
+            for idx_a, idx_b in self.current_matches[:num_to_show]:
                 kp1 = self.current_keypoints1[idx_a]
                 kp2 = self.current_keypoints2[idx_b]
 
@@ -278,9 +320,17 @@ class MatchingImagesController(QObject):
                 pt2 = (int(kp2.x), int(kp2.y)) if hasattr(kp2, "x") else (int(kp2[0]), int(kp2[1]))
                 pt2_shifted = (pt2[0] + w1, pt2[1])
 
-                cv2.circle(combined, pt1, 4, (0, 255, 0), -1)
+                cv2.circle(combined, pt1,         4, (0, 255, 0), -1)
                 cv2.circle(combined, pt2_shifted, 4, (0, 255, 0), -1)
                 cv2.line(combined, pt1, pt2_shifted, (255, 100, 0), 1)
+
+            # Enlarge the output image itself (not only the container) for clearer inspection.
+            h_combined, w_combined = combined.shape[:2]
+            if w_combined > 0 and w_combined < self.match_viz_min_width:
+                scale = self.match_viz_min_width / float(w_combined)
+                new_w = int(w_combined * scale)
+                new_h = int(h_combined * scale)
+                combined = cv2.resize(combined, (new_w, new_h), interpolation=cv2.INTER_LINEAR)
 
             combined_rgb = cv2.cvtColor(combined, cv2.COLOR_BGR2RGB)
             self._display_image_in_label(self.window.matchingVisualizationHost, combined_rgb)
