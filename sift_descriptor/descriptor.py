@@ -1,8 +1,8 @@
 import time
 import numpy as np
 
-from gradient import DescriptorKeypoint, compute_gradients
-from orientation import dominant_orientation
+from .gradient import DescriptorKeypoint, compute_gradients
+from .orientation import dominant_orientation
 
 def extract_patch(ix, iy, x, y, orientation, size=16):   # extract 16x16 patch aligned to dominant orientation لو الصورة اتلفت descriptor يفضل ثابت
     mag = np.zeros((size, size))
