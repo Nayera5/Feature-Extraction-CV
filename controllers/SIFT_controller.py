@@ -42,10 +42,12 @@ class SIFTController:
 		gaussian_pyramid, gaussian_info = build_gaussian_pyramid(gray)
 		dog_pyramid, dog_info = build_dog_pyramid(gaussian_pyramid)
 
-		if self.use_fast_extrema:
-			raw_keypoints, extrema_info = detect_extrema_fast(dog_pyramid)
-		else:
-			raw_keypoints, extrema_info = detect_extrema(dog_pyramid)
+		# if self.use_fast_extrema:
+		# 	raw_keypoints, extrema_info = detect_extrema_fast(dog_pyramid)
+		# else:
+		# 	print("Using slower but more accurate extrema detection...")
+		# 	raw_keypoints, extrema_info = detect_extrema(dog_pyramid)
+		raw_keypoints, extrema_info = detect_extrema_fast(dog_pyramid)
 
 		filtered_keypoints, filter_info = filter_keypoints(raw_keypoints, dog_pyramid)
 		descriptors, descriptor_info = generate_descriptors(filtered_keypoints, gaussian_pyramid)

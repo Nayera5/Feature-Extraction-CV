@@ -52,10 +52,10 @@ def build_descriptor(mag, ang):
 
 
 def normalize(desc):
-    if np.linalg.norm(desc) != 0:
-        desc = desc / np.linalg.norm(desc)
+    # if np.linalg.norm(desc) != 0:
+    #     desc = desc / np.linalg.norm(desc)
 
-    desc = np.clip(desc, 0, 0.2)
+    # desc = np.clip(desc, 0, 0.2)
 
     if np.linalg.norm(desc) != 0:
         desc = desc / np.linalg.norm(desc)
@@ -69,20 +69,25 @@ def generate_descriptors(keypoints, gaussian_pyramid):
 
     for kp in keypoints:
         octave = int(kp.octave)
-
+        
         if octave >= len(gaussian_pyramid):
             continue
 
-        layer = gaussian_pyramid[octave][int(kp.scale)]
+        layer = gaussian_pyramid[octave][int(kp.scale) + 1]
         ix, iy = compute_gradients(layer)
 
         scale_factor = 2 ** (octave - 1)
         x = int(kp.x / scale_factor)
         y = int(kp.y / scale_factor)
 
+        # x = int(kp.x)
+        # y = int(kp.y)
+        print("fffffffffffffffffffffffffffff")
         if x < 8 or y < 8 or x >= layer.shape[1]-8 or y >= layer.shape[0]-8:
+            # Optional: try to extract with padding instead of skipping
+            # Or use a smaller radius for edge keypoints
             continue
-
+        print("uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu")
         orientation = dominant_orientation(ix, iy, x, y, radius=8)
 
         mag, ang = extract_patch(ix, iy, x, y, orientation)
