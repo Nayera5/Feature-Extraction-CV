@@ -24,6 +24,39 @@ class SIFTController:
 	def __init__(self, use_fast_extrema: bool = False):
 		self.use_fast_extrema = use_fast_extrema
 
+	def _to_color_image(self, image: np.ndarray | str | Path) -> np.ndarray:
+		if isinstance(image, (str, Path)):
+			img = cv2.imread(str(image), cv2.IMREAD_COLOR)
+			if img is None:
+				raise ValueError(f"Could not read image: {image}")
+			return img
+
+		img = np.asarray(image)
+		if img.ndim == 2:
+			return cv2.cvtColor(img, cv2.COLOR_GRAY2BGR)
+		if img.ndim == 3:
+			return img
+		raise ValueError("Unsupported image shape. Expected HxW or HxWxC.")
+
+	def prepare_image_pair(
+		self,
+		image1: np.ndarray | str | Path,
+		image2: np.ndarray | str | Path,
+	) -> tuple[np.ndarray, np.ndarray]:
+		img1 = self._to_color_image(image1)
+		img2 = self._to_color_image(image2)
+
+		target_h = min(img1.shape[0], img2.shape[0])
+		target_w = min(img1.shape[1], img2.shape[1])
+		target_size = (target_w, target_h)
+
+		if (img1.shape[1], img1.shape[0]) != target_size:
+			img1 = cv2.resize(img1, target_size, interpolation=cv2.INTER_AREA)
+		if (img2.shape[1], img2.shape[0]) != target_size:
+			img2 = cv2.resize(img2, target_size, interpolation=cv2.INTER_AREA)
+
+		return img1, img2
+
 	def _to_gray_image(self, image: np.ndarray | str | Path) -> np.ndarray:
 		if isinstance(image, (str, Path)):
 			img = cv2.imread(str(image), cv2.IMREAD_GRAYSCALE)
@@ -50,6 +83,7 @@ class SIFTController:
 		raw_keypoints, extrema_info = detect_extrema_fast(dog_pyramid)
 
 		filtered_keypoints, filter_info = filter_keypoints(raw_keypoints, dog_pyramid)
+		print("Filtered keypoints:", len(filtered_keypoints))
 		descriptors, descriptor_info = generate_descriptors(filtered_keypoints, gaussian_pyramid)
 
 		return {
@@ -120,8 +154,9 @@ class SIFTController:
 				- descriptors2: Descriptors from image 2
 				- matches: List of matched pairs
 		"""
-		result1 = self.run(image1)
-		result2 = self.run(image2)
+		prepared1, prepared2 = self.prepare_image_pair(image1, image2)
+		result1 = self.run(prepared1)
+		result2 = self.run(prepared2)
 		
 		descriptors1 = result1["descriptors"]
 		descriptors2 = result2["descriptors"]

@@ -29,13 +29,14 @@ class MatchingWorker(QThread):
 
     def run(self):
         try:
-            result1 = self.sift_controller.run(self.image1)
-            result2 = self.sift_controller.run(self.image2)
+            image1_prepared, image2_prepared = self.sift_controller.prepare_image_pair(self.image1, self.image2)
+            result1 = self.sift_controller.run(image1_prepared)
+            result2 = self.sift_controller.run(image2_prepared)
 
             descriptors1 = result1["descriptors"]
             descriptors2 = result2["descriptors"]
-            keypoints1 = result1["filtered_keypoints"]
-            keypoints2 = result2["filtered_keypoints"]
+            filtered_keypoints1 = result1["filtered_keypoints"]
+            filtered_keypoints2 = result2["filtered_keypoints"]
 
             matches = self.sift_controller.match_descriptors(
                 descriptors1,
@@ -46,14 +47,16 @@ class MatchingWorker(QThread):
 
             self.finished.emit({
                 "success": True,
-                "keypoints1": keypoints1,
-                "keypoints2": keypoints2,
+                "keypoints1": descriptors1,
+                "keypoints2": descriptors2,
                 "descriptors1": descriptors1,
                 "descriptors2": descriptors2,
                 "matches": matches,
+                "image1_prepared": image1_prepared,
+                "image2_prepared": image2_prepared,
                 "num_matches": len(matches),
-                "num_keypoints1": len(keypoints1),
-                "num_keypoints2": len(keypoints2),
+                "num_keypoints1": len(filtered_keypoints1),
+                "num_keypoints2": len(filtered_keypoints2),
             })
         except Exception as e:
             self.error.emit(str(e))
@@ -76,6 +79,8 @@ class MatchingImagesController(QObject):
         self.current_matches = None
         self.current_keypoints1 = None
         self.current_keypoints2 = None
+        self.current_image1_prepared = None
+        self.current_image2_prepared = None
         self._worker = None
 
     # ------------------------------------------------------------------
@@ -126,11 +131,11 @@ class MatchingImagesController(QObject):
             image_rgb = cv2.cvtColor(raw, cv2.COLOR_BGR2RGB)
 
             if slot == 1:
-                self.image1_array = image_rgb
+                self.image1_array = raw
                 self._display_preview(self.window.matchingImage1Host, image_rgb)
                 self.window.matchingImage1NameLbl.setText(Path(path).name)
             else:
-                self.image2_array = image_rgb
+                self.image2_array = raw
                 self._display_preview(self.window.matchingImage2Host, image_rgb)
                 self.window.matchingImage2NameLbl.setText(Path(path).name)
 
@@ -226,6 +231,8 @@ class MatchingImagesController(QObject):
             self.current_matches = result["matches"]
             self.current_keypoints1 = result["keypoints1"]
             self.current_keypoints2 = result["keypoints2"]
+            self.current_image1_prepared = result["image1_prepared"]
+            self.current_image2_prepared = result["image2_prepared"]
 
             self.window.matchingStatsLbl.setText(
                 f"Keypoints Image 1: {result['num_keypoints1']}\n"
@@ -256,17 +263,9 @@ class MatchingImagesController(QObject):
             return
 
         try:
-            img1 = cv2.cvtColor(self.image1_array, cv2.COLOR_RGB2BGR)
-            img2 = cv2.cvtColor(self.image2_array, cv2.COLOR_RGB2BGR)
-
-            # Pad shorter image vertically so hstack works cleanly
-            h1, w1 = img1.shape[:2]
-            h2, w2 = img2.shape[:2]
-            max_h = max(h1, h2)
-            if h1 < max_h:
-                img1 = cv2.copyMakeBorder(img1, 0, max_h - h1, 0, 0, cv2.BORDER_CONSTANT)
-            if h2 < max_h:
-                img2 = cv2.copyMakeBorder(img2, 0, max_h - h2, 0, 0, cv2.BORDER_CONSTANT)
+            img1 = self.current_image1_prepared.copy()
+            img2 = self.current_image2_prepared.copy()
+            w1 = img1.shape[1]
 
             combined = np.hstack([img1, img2])
 

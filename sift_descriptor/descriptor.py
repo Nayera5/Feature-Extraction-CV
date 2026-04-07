@@ -30,21 +30,26 @@ def extract_patch(ix, iy, x, y, orientation, size=16):   # extract 16x16 patch a
     return mag, ang
 
 
+
 def build_descriptor(mag, ang):
     desc = []
 
+    # نحول الزوايا مباشرة لـ bins (مرة واحدة بس)
+    bin_map = (ang // 45).astype(int) % 8
+
+    # نقسم الـ 16x16 إلى 4x4 cells
     for i in range(0, 16, 4):
         for j in range(0, 16, 4):
 
+            # ناخد cell 4x4 مرة واحدة
+            cell_mag = mag[i:i+4, j:j+4]
+            cell_bins = bin_map[i:i+4, j:j+4]
+
             hist = np.zeros(8)
 
-            for r in range(4):
-                for c in range(4):
-                    m = mag[i+r, j+c]
-                    a = ang[i+r, j+c]
-
-                    bin_idx = int(a / 45) % 8
-                    hist[bin_idx] += m
+            # نجمع القيم بدون loop على كل pixel
+            for b in range(8):
+                hist[b] = np.sum(cell_mag[cell_bins == b])
 
             desc.extend(hist)
 
@@ -82,12 +87,12 @@ def generate_descriptors(keypoints, gaussian_pyramid):
 
         # x = int(kp.x)
         # y = int(kp.y)
-        print("fffffffffffffffffffffffffffff")
+        # print("fffffffffffffffffffffffffffff")
         if x < 8 or y < 8 or x >= layer.shape[1]-8 or y >= layer.shape[0]-8:
             # Optional: try to extract with padding instead of skipping
             # Or use a smaller radius for edge keypoints
             continue
-        print("uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu")
+        # print("uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu")
         orientation = dominant_orientation(ix, iy, x, y, radius=8)
 
         mag, ang = extract_patch(ix, iy, x, y, orientation)
