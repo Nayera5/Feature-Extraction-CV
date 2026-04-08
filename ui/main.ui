@@ -1,0 +1,401 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+    <class>MainWindow</class>
+    <widget class="QMainWindow" name="MainWindow">
+        <property name="geometry">
+            <rect>
+                <x>0</x>
+                <y>0</y>
+                <width>1500</width>
+                <height>900</height>
+            </rect>
+        </property>
+        <property name="windowTitle">
+            <string>Feature Extraction &amp; Matching Lab</string>
+        </property>
+        <widget class="QWidget" name="centralwidget">
+            <layout class="QVBoxLayout" name="verticalLayoutMain">
+                <item>
+                    <widget class="QTabWidget" name="tabWidget">
+                        <property name="documentMode">
+                            <bool>true</bool>
+                        </property>
+
+                        <!-- ═══════════════════════════════════════════════════════ MATCHING IMAGES TAB -->
+                        <widget class="QWidget" name="tabMatchingImages">
+                            <attribute name="title"><string>Matching Images</string></attribute>
+                            <layout class="QHBoxLayout" name="layoutMatchingPage">
+
+                                <!-- Left Panel: Controls and Images -->
+                                <item>
+                                    <widget class="QWidget" name="matchingControlsWidget" native="true">
+                                        <property name="minimumSize"><size><width>500</width><height>0</height></size></property>
+                                        <property name="maximumSize"><size><width>620</width><height>16777215</height></size></property>
+                                        <layout class="QVBoxLayout" name="layoutMatchingControls">
+
+                                            <!-- Image 1 Group -->
+                                            <item>
+                                                <widget class="QGroupBox" name="matchingImage1Group">
+                                                    <property name="title"><string>Image 1</string></property>
+                                                    <layout class="QVBoxLayout" name="layoutMatchingImage1">
+                                                        <item>
+                                                            <widget class="QPushButton" name="matchingLoadImage1Btn">
+                                                                <property name="text"><string>📂 Load Image 1</string></property>
+                                                            </widget>
+                                                        </item>
+                                                        <item>
+                                                            <widget class="QLabel" name="matchingImage1NameLbl">
+                                                                <property name="text"><string>No image selected</string></property>
+                                                                <property name="wordWrap"><bool>true</bool></property>
+                                                            </widget>
+                                                        </item>
+                                                        <item>
+                                                            <widget class="QLabel" name="matchingImage1Host">
+                                                                <property name="minimumSize"><size><width>0</width><height>280</height></size></property>
+                                                                <property name="alignment"><set>Qt::AlignCenter</set></property>
+                                                                <property name="text"><string>Image 1 preview</string></property>
+                                                            </widget>
+                                                        </item>
+                                                    </layout>
+                                                </widget>
+                                            </item>
+
+                                            <!-- Image 2 Group -->
+                                            <item>
+                                                <widget class="QGroupBox" name="matchingImage2Group">
+                                                    <property name="title"><string>Image 2</string></property>
+                                                    <layout class="QVBoxLayout" name="layoutMatchingImage2">
+                                                        <item>
+                                                            <widget class="QPushButton" name="matchingLoadImage2Btn">
+                                                                <property name="text"><string>📂 Load Image 2</string></property>
+                                                            </widget>
+                                                        </item>
+                                                        <item>
+                                                            <widget class="QLabel" name="matchingImage2NameLbl">
+                                                                <property name="text"><string>No image selected</string></property>
+                                                                <property name="wordWrap"><bool>true</bool></property>
+                                                            </widget>
+                                                        </item>
+                                                        <item>
+                                                            <widget class="QLabel" name="matchingImage2Host">
+                                                                <property name="minimumSize"><size><width>0</width><height>280</height></size></property>
+                                                                <property name="alignment"><set>Qt::AlignCenter</set></property>
+                                                                <property name="text"><string>Image 2 preview</string></property>
+                                                            </widget>
+                                                        </item>
+                                                    </layout>
+                                                </widget>
+                                            </item>
+
+                                            <item>
+                                                <spacer name="verticalSpacerMatching1">
+                                                    <property name="orientation"><enum>Qt::Vertical</enum></property>
+                                                    <property name="sizeHint" stdset="0"><size><width>20</width><height>40</height></size></property>
+                                                </spacer>
+                                            </item>
+                                        </layout>
+                                    </widget>
+                                </item>
+
+                                <!-- Right Panel: Parameters and Results -->
+                                <item>
+                                    <widget class="QWidget" name="matchingResultsWidget" native="true">
+                                        <property name="sizePolicy">
+                                            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                                                <horstretch>1</horstretch>
+                                                <verstretch>0</verstretch>
+                                            </sizepolicy>
+                                        </property>
+                                        <layout class="QVBoxLayout" name="layoutMatchingResults">
+
+                                            <item>
+                                                <layout class="QHBoxLayout" name="layoutMatchingTopRow">
+                                                    <item>
+                                                        <widget class="QGroupBox" name="matchingParamsGroup">
+                                                            <property name="title"><string>Matching Parameters</string></property>
+                                                            <layout class="QVBoxLayout" name="layoutMatchingParams">
+                                                                <item>
+                                                                    <layout class="QHBoxLayout">
+                                                                        <item>
+                                                                            <widget class="QLabel" name="matchingTechniqueLbl">
+                                                                                <property name="text"><string>Technique:</string></property>
+                                                                            </widget>
+                                                                        </item>
+                                                                        <item>
+                                                                            <widget class="QComboBox" name="matchingTechniqueCombo">
+                                                                                <property name="minimumSize"><size><width>120</width><height>35</height></size></property>
+                                                                                <item><property name="text"><string>SSD</string></property></item>
+                                                                                <item><property name="text"><string>NCC</string></property></item>
+                                                                            </widget>
+                                                                        </item>
+                                                                        <item>
+                                                                            <spacer>
+                                                                                <property name="orientation"><enum>Qt::Horizontal</enum></property>
+                                                                                <property name="sizeHint" stdset="0"><size><width>40</width><height>20</height></size></property>
+                                                                            </spacer>
+                                                                        </item>
+                                                                    </layout>
+                                                                </item>
+                                                                <item>
+                                                                    <layout class="QHBoxLayout">
+                                                                        <item>
+                                                                            <widget class="QLabel" name="matchingRatioLbl">
+                                                                                <property name="text"><string>Ratio Threshold:</string></property>
+                                                                            </widget>
+                                                                        </item>
+                                                                        <item>
+                                                                            <widget class="QDoubleSpinBox" name="matchingRatioSpin">
+                                                                                <property name="minimumSize"><size><width>120</width><height>35</height></size></property>
+                                                                                <property name="minimum"><double>0.100000000000000</double></property>
+                                                                                <property name="maximum"><double>1.000000000000000</double></property>
+                                                                                <property name="singleStep"><double>0.050000000000000</double></property>
+                                                                                <property name="decimals"><number>2</number></property>
+                                                                                <property name="value"><double>0.750000000000000</double></property>
+                                                                            </widget>
+                                                                        </item>
+                                                                        <item>
+                                                                            <spacer>
+                                                                                <property name="orientation"><enum>Qt::Horizontal</enum></property>
+                                                                                <property name="sizeHint" stdset="0"><size><width>40</width><height>20</height></size></property>
+                                                                            </spacer>
+                                                                        </item>
+                                                                    </layout>
+                                                                </item>
+                                                                <item>
+                                                                    <layout class="QHBoxLayout">
+                                                                        <item>
+                                                                            <widget class="QLabel" name="matchingNumDisplayLbl">
+                                                                                <property name="text"><string>Matches to Display:</string></property>
+                                                                            </widget>
+                                                                        </item>
+                                                                        <item>
+                                                                            <widget class="QSpinBox" name="matchingNumDisplaySpin">
+                                                                                <property name="minimumSize"><size><width>120</width><height>35</height></size></property>
+                                                                                <property name="minimum"><number>1</number></property>
+                                                                                <property name="maximum"><number>500</number></property>
+                                                                                <property name="singleStep"><number>10</number></property>
+                                                                                <property name="value"><number>50</number></property>
+                                                                            </widget>
+                                                                        </item>
+                                                                        <item>
+                                                                            <spacer>
+                                                                                <property name="orientation"><enum>Qt::Horizontal</enum></property>
+                                                                                <property name="sizeHint" stdset="0"><size><width>40</width><height>20</height></size></property>
+                                                                            </spacer>
+                                                                        </item>
+                                                                    </layout>
+                                                                </item>
+                                                            </layout>
+                                                        </widget>
+                                                    </item>
+                                                    <item>
+                                                        <widget class="QGroupBox" name="matchingResultsGroup">
+                                                            <property name="title"><string>Matching Results</string></property>
+                                                            <layout class="QVBoxLayout" name="layoutMatchingResultsContent">
+                                                                <item>
+                                                                    <widget class="QLabel" name="matchingStatsLbl">
+                                                                        <property name="text"><string>Run matching to see results</string></property>
+                                                                        <property name="wordWrap"><bool>true</bool></property>
+                                                                    </widget>
+                                                                </item>
+                                                            </layout>
+                                                        </widget>
+                                                    </item>
+                                                </layout>
+                                            </item>
+
+                                            <!-- Run Button -->
+                                            <item>
+                                                <widget class="QPushButton" name="matchingRunBtn">
+                                                    <property name="enabled"><bool>false</bool></property>
+                                                    <property name="minimumSize"><size><width>0</width><height>45</height></size></property>
+                                                    <property name="text"><string>▶  Match Images</string></property>
+                                                </widget>
+                                            </item>
+
+                                            <!-- ── Matches Visualisation ──
+                                                 Plain QLabel that stretches to fill all remaining space.
+                                                 The controller scales the combined image to fit — no scrollbar. -->
+                                            <item>
+                                                <widget class="QLabel" name="matchingVisualizationHost">
+                                                    <property name="sizePolicy">
+                                                        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                                                            <horstretch>0</horstretch>
+                                                            <verstretch>1</verstretch>
+                                                        </sizepolicy>
+                                                    </property>
+                                                    <property name="minimumSize"><size><width>0</width><height>300</height></size></property>
+                                                    <property name="alignment"><set>Qt::AlignCenter</set></property>
+                                                    <property name="text"><string>Matches visualization</string></property>
+                                                </widget>
+                                            </item>
+
+                                        </layout>
+                                    </widget>
+                                </item>
+                            </layout>
+                        </widget>
+
+                        <!-- ═══════════════════════════════════════════════════════ FEATURE DETECTION TAB -->
+                        <widget class="QWidget" name="featureDetectionTab">
+                         <attribute name="title">
+                          <string>Feature Detection</string>
+                         </attribute>
+
+                         <layout class="QHBoxLayout" name="harrisRootLayout">
+                          <property name="spacing"><number>12</number></property>
+                          <property name="leftMargin"><number>12</number></property>
+                          <property name="topMargin"><number>12</number></property>
+                          <property name="rightMargin"><number>12</number></property>
+                          <property name="bottomMargin"><number>12</number></property>
+
+                          <!-- ══════ LEFT PANEL ══════ -->
+                          <item>
+                           <widget class="QWidget" name="harrisLeftPanel">
+                            <property name="maximumWidth"><number>360</number></property>
+                            <property name="minimumWidth"><number>260</number></property>
+
+                            <layout class="QVBoxLayout" name="harrisLeftLayout">
+                             <property name="spacing"><number>10</number></property>
+
+                             <item>
+                              <widget class="QLabel" name="harrisImageNameLbl">
+                               <property name="text"><string>No image loaded</string></property>
+                               <property name="wordWrap"><bool>true</bool></property>
+                              </widget>
+                             </item>
+
+                             <item>
+                              <widget class="QPushButton" name="harrisBtnLoad">
+                               <property name="text"><string>Load Image</string></property>
+                              </widget>
+                             </item>
+
+                             <item>
+                              <widget class="QGroupBox" name="harrisParamsGroup">
+                               <property name="title"><string>Parameters</string></property>
+                               <layout class="QFormLayout" name="harrisParamsForm">
+
+                                <item row="0" column="0">
+                                 <widget class="QLabel"><property name="text"><string>Method</string></property></widget>
+                                </item>
+                                <item row="0" column="1">
+                                 <widget class="QComboBox" name="harrisCmbMethod">
+                                  <item><property name="text"><string>Harris</string></property></item>
+                                  <item><property name="text"><string>λ- (Shi-Tomasi)</string></property></item>
+                                 </widget>
+                                </item>
+
+                                <item row="1" column="0">
+                                 <widget class="QLabel"><property name="text"><string>Threshold</string></property></widget>
+                                </item>
+                                <item row="1" column="1">
+                                 <widget class="QDoubleSpinBox" name="harrisSpnThreshold">
+                                  <property name="minimum"><double>0.001</double></property>
+                                  <property name="maximum"><double>1.000</double></property>
+                                  <property name="value"><double>0.010</double></property>
+                                 </widget>
+                                </item>
+
+                                <item row="2" column="0">
+                                 <widget class="QLabel" name="harrisKLabel"><property name="text"><string>k (Harris)</string></property></widget>
+                                </item>
+                                <item row="2" column="1">
+                                 <widget class="QDoubleSpinBox" name="harrisSpnK">
+                                  <property name="minimum"><double>0.010</double></property>
+                                  <property name="maximum"><double>0.200</double></property>
+                                  <property name="value"><double>0.040</double></property>
+                                 </widget>
+                                </item>
+
+                                <item row="3" column="0">
+                                 <widget class="QLabel"><property name="text"><string>Max corners</string></property></widget>
+                                </item>
+                                <item row="3" column="1">
+                                 <widget class="QSpinBox" name="harrisSpnMaxCorners">
+                                  <property name="minimum"><number>100</number></property>
+                                  <property name="maximum"><number>10000</number></property>
+                                  <property name="value"><number>2000</number></property>
+                                 </widget>
+                                </item>
+
+                               </layout>
+                              </widget>
+                             </item>
+
+                             <item>
+                              <widget class="QPushButton" name="harrisBtnRun">
+                               <property name="text"><string>▶ Run Detection</string></property>
+                               <property name="enabled"><bool>false</bool></property>
+                              </widget>
+                             </item>
+
+                             <item>
+                              <widget class="QLabel" name="harrisStatsLbl">
+                               <property name="text"><string>—</string></property>
+                               <property name="wordWrap"><bool>true</bool></property>
+                              </widget>
+                             </item>
+
+                             <item>
+                              <widget class="QPushButton" name="harrisBtnSave">
+                               <property name="text"><string>Save Result</string></property>
+                               <property name="enabled"><bool>false</bool></property>
+                              </widget>
+                             </item>
+
+                            </layout>
+                           </widget>
+                          </item>
+
+                          <!-- ══════ CANVAS ══════ -->
+                          <item>
+                           <widget class="QLabel" name="harrisCanvasLabel">
+                            <property name="text"><string>Load an image to begin</string></property>
+                            <property name="alignment"><set>Qt::AlignCenter</set></property>
+                            <property name="minimumSize">
+                             <size><width>400</width><height>300</height></size>
+                            </property>
+                           </widget>
+                          </item>
+
+                         </layout>
+                        </widget>
+
+                    </widget>
+                </item>
+            </layout>
+        </widget>
+        <widget class="QMenuBar" name="menubar">
+            <property name="geometry">
+                <rect><x>0</x><y>0</y><width>1500</width><height>22</height></rect>
+            </property>
+            <widget class="QMenu" name="menuFile">
+                <property name="title"><string>&amp;File</string></property>
+                <addaction name="actionOpenImage"/>
+                <addaction name="separator"/>
+                <addaction name="actionQuit"/>
+            </widget>
+            <widget class="QMenu" name="menuHelp">
+                <property name="title"><string>&amp;Help</string></property>
+                <addaction name="actionAbout"/>
+            </widget>
+            <addaction name="menuFile"/>
+            <addaction name="menuHelp"/>
+        </widget>
+        <widget class="QStatusBar" name="statusbar"/>
+        <action name="actionOpenImage">
+            <property name="text"><string>&amp;Open Image...</string></property>
+            <property name="shortcut"><string>Ctrl+O</string></property>
+        </action>
+        <action name="actionQuit">
+            <property name="text"><string>&amp;Quit</string></property>
+            <property name="shortcut"><string>Ctrl+Q</string></property>
+        </action>
+        <action name="actionAbout">
+            <property name="text"><string>&amp;About</string></property>
+        </action>
+    </widget>
+    <resources/>
+    <connections/>
+</ui>
