@@ -150,11 +150,11 @@ class MatchingImagesController(QObject):
             image_rgb = cv2.cvtColor(raw, cv2.COLOR_BGR2RGB)
 
             if slot == 1:
-                self.image1_array = image_rgb
+                self.image1_array = raw
                 self._display_preview(self.window.matchingImage1Host, image_rgb)
                 self.window.matchingImage1NameLbl.setText(Path(path).name)
             else:
-                self.image2_array = image_rgb
+                self.image2_array = raw
                 self._display_preview(self.window.matchingImage2Host, image_rgb)
                 self.window.matchingImage2NameLbl.setText(Path(path).name)
 
@@ -260,6 +260,8 @@ class MatchingImagesController(QObject):
             self.current_matches    = result["matches"]
             self.current_keypoints1 = result["keypoints1"]
             self.current_keypoints2 = result["keypoints2"]
+            self.current_image1_prepared = result["image1_prepared"]
+            self.current_image2_prepared = result["image2_prepared"]
 
             self.window.matchingStatsLbl.setText(
                 f"Keypoints Image 1: {result['num_keypoints1']}\n"
