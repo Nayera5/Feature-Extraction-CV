@@ -20,8 +20,7 @@ from PyQt5.QtCore import QObject, Qt, pyqtSignal
 from PyQt5.QtGui import QImage, QPixmap
 from PyQt5.QtWidgets import QFileDialog, QLabel, QMainWindow
 
-from detectors.harris_detector import detect_harris
-from detectors.lambda_detector import detect_lambda
+from detectors.feature_detector import detect_features
 
 
 class HarrisController(QObject):
@@ -143,23 +142,24 @@ class HarrisController(QObject):
 
 
         try:
-            if method.startswith("Harris"):
-                result = detect_harris(
-                    self._image,
-                    k=k_harris,
-                    threshold_rel=threshold,
-                    max_corners=max_corn,
-                )
-                method_label = "Harris"
+            method_ui = self._combo_text(self._CMB_METHOD)
+            if method_ui.startswith("Harris"):
+                method = "harris"
+                k_val = k_harris
                 extra = f"k = {k_harris:.4f}"
             else:
-                result = detect_lambda(
-                    self._image,
-                    threshold_rel=threshold,
-                    max_corners=max_corn,
-                )
-                method_label = "λ-  (Shi-Tomasi)"
+                method = "lambda"
+                k_val = 0.0  # ignored for lambda
                 extra = ""
+
+            result = detect_features(
+                self._image,
+                method=method,
+                k=k_val,
+                threshold_rel=threshold,
+                max_corners=max_corn,
+            )
+            method_label = method_ui
 
         except Exception as exc:  # noqa: BLE001
             traceback.print_exc()
