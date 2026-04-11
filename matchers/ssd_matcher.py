@@ -2,27 +2,49 @@ import numpy as np
 import time
 
 def match_ssd(descriptors_A, descriptors_B, ratio_thresh=0.75):
-    matches = []
-    start = time.time()
+    matches_A2B = []
+    matches_B2A = []
 
+    # A → B
     for i, f in enumerate(descriptors_A):
         diff = descriptors_B - f
         ssd = np.sum(diff ** 2, axis=1)
 
-        if len(ssd) < 2:          # need at least 2 candidates for ratio test
+        if len(ssd) < 2:
             continue
 
         idx = np.argsort(ssd)
         best, second = ssd[idx[0]], ssd[idx[1]]
 
         if second > 0 and (best / second) < ratio_thresh:
-            matches.append((i, int(idx[0])))
+            matches_A2B.append((i, int(idx[0])))
 
-    end = time.time()
-    print(f"SSD Matching Time: {end - start:.3f}s — {len(matches)} matches")
+    # B → A
+    for j, f in enumerate(descriptors_B):
+        diff = descriptors_A - f
+        ssd = np.sum(diff ** 2, axis=1)
+
+        if len(ssd) < 2:
+            continue
+
+        idx = np.argsort(ssd)
+        best, second = ssd[idx[0]], ssd[idx[1]]
+
+        if second > 0 and (best / second) < ratio_thresh:
+            matches_B2A.append((int(idx[0]), j))
+
+    # Cross-check
+    matches_B2A_set = set(matches_B2A)
+
+    matches = []
+    for m in matches_A2B:
+        if m in matches_B2A_set:
+            matches.append(m)
+
+    print(f"Cross-check matches: {len(matches)}")
     return matches
 
-    
+
 
 
 def match_ncc(descriptors_A, descriptors_B, ratio_thresh=0.9):

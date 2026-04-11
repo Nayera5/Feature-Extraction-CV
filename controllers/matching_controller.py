@@ -221,6 +221,13 @@ class MatchingImagesController(QObject):
         both = self.image1_array is not None and self.image2_array is not None
         self.window.matchingRunBtn.setEnabled(both)
 
+    def _set_match_display_limit(self, match_count: int):
+        spin = self.window.matchingNumDisplaySpin
+        limit = max(1, match_count)
+        spin.setMaximum(limit)
+        if spin.value() > limit:
+            spin.setValue(limit)
+
     def _on_num_display_changed(self):
         if self.current_matches is not None:
             self._draw_matches()
@@ -268,6 +275,7 @@ class MatchingImagesController(QObject):
             self.current_matches    = result["matches"]
             self.current_keypoints1 = result["keypoints1"]
             self.current_keypoints2 = result["keypoints2"]
+            self._set_match_display_limit(result["num_matches"])
 
             self.window.matchingStatsLbl.setText(
                 f"Keypoints Image 1: {result['num_keypoints1']}\n"

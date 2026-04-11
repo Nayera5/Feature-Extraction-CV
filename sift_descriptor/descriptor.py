@@ -34,20 +34,16 @@ def extract_patch(ix, iy, x, y, orientation, size=16):   # extract 16x16 patch a
 def build_descriptor(mag, ang):
     desc = []
 
-    # نحول الزوايا مباشرة لـ bins (مرة واحدة بس)
     bin_map = (ang // 45).astype(int) % 8
 
-    # نقسم الـ 16x16 إلى 4x4 cells
     for i in range(0, 16, 4):
         for j in range(0, 16, 4):
 
-            # ناخد cell 4x4 مرة واحدة
             cell_mag = mag[i:i+4, j:j+4]
             cell_bins = bin_map[i:i+4, j:j+4]
 
             hist = np.zeros(8)
 
-            # نجمع القيم بدون loop على كل pixel
             for b in range(8):
                 hist[b] = np.sum(cell_mag[cell_bins == b])
 
