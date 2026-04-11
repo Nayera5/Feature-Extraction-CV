@@ -10,7 +10,7 @@ from sift_detector.dog_pyramid import build_dog_pyramid
 from sift_detector.extrema_detection import detect_extrema_fast
 from sift_detector.keypoint_filter import filter_keypoints
 from sift_descriptor import generate_descriptors
-from matchers.ssd_matcher import match_ssd , match_ncc
+from matchers.ssd_ncc_matcher import match_ssd , match_ncc
 
 
 class SIFTController:
