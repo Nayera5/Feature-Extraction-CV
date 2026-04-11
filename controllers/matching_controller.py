@@ -127,11 +127,14 @@ class MatchingImagesController(QObject):
         self.window = window
 
         self.window.matchingTechniqueCombo.setCurrentIndex(0)
+        self.window.matchingTechniqueCombo.currentTextChanged.connect(self._on_technique_changed)
 
         self.window.matchingLoadImage1Btn.clicked.connect(self.load_image_1)
         self.window.matchingLoadImage2Btn.clicked.connect(self.load_image_2)
         self.window.matchingRunBtn.clicked.connect(self.run_matching)
         self.window.matchingNumDisplaySpin.valueChanged.connect(self._on_num_display_changed)
+
+        self._on_technique_changed(self.window.matchingTechniqueCombo.currentText())
 
         self._update_run_button()
 
@@ -227,6 +230,16 @@ class MatchingImagesController(QObject):
         spin.setMaximum(limit)
         if spin.value() > limit:
             spin.setValue(limit)
+
+    def _on_technique_changed(self, technique: str):
+        if not hasattr(self, "window") or self.window is None:
+            return
+
+        technique = technique.lower().strip()
+        if technique == "ncc":
+            self.window.matchingRatioSpin.setValue(0.9)
+        elif technique == "ssd":
+            self.window.matchingRatioSpin.setValue(0.75)
 
     def _on_num_display_changed(self):
         if self.current_matches is not None:

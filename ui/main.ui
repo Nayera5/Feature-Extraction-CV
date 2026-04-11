@@ -110,8 +110,14 @@
 
                                             <item>
                                                 <layout class="QHBoxLayout" name="layoutMatchingTopRow">
-                                                    <item>
+                                                    <item stretch="1">
                                                         <widget class="QGroupBox" name="matchingParamsGroup">
+                                                            <property name="sizePolicy">
+                                                                <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                                                                    <horstretch>1</horstretch>
+                                                                    <verstretch>0</verstretch>
+                                                                </sizepolicy>
+                                                            </property>
                                                             <property name="title"><string>Matching Parameters</string></property>
                                                             <layout class="QVBoxLayout" name="layoutMatchingParams">
                                                                 <item>
@@ -188,8 +194,14 @@
                                                             </layout>
                                                         </widget>
                                                     </item>
-                                                    <item>
+                                                    <item stretch="1">
                                                         <widget class="QGroupBox" name="matchingResultsGroup">
+                                                            <property name="sizePolicy">
+                                                                <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                                                                    <horstretch>1</horstretch>
+                                                                    <verstretch>0</verstretch>
+                                                                </sizepolicy>
+                                                            </property>
                                                             <property name="title"><string>Matching Results</string></property>
                                                             <layout class="QVBoxLayout" name="layoutMatchingResultsContent">
                                                                 <item>

@@ -69,7 +69,7 @@ def match_ncc(descriptors_A, descriptors_B, ratio_thresh=0.9):
         # Cosine-like normalized cross-correlation in [-1, 1]
         ncc_scores = (B_norm @ f_norm) / float(f_norm.size)  # shape: (N_B,)
 
-        idx = np.argsort(-ncc_scores)                 # descending
+        idx = np.argsort(- ncc_scores)                 # descending
         best, second = ncc_scores[idx[0]], ncc_scores[idx[1]]
 
         # Convert similarity to distance and apply Lowe-style ratio test.
