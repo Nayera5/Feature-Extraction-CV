@@ -1,0 +1,660 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1118</width>
+    <height>771</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QMainWindow {
+    background-color: #FFF5F7;
+}
+QWidget {
+    background-color: #FFF5F7;
+    color: #5A4A5D;
+}
+QPushButton {
+    background-color: #FFD6E0;
+    border: 2px solid #FFB3C6;
+    border-radius: 8px;
+    padding: 6px 12px;
+    color: #5A4A5D;
+    font-weight: bold;
+    min-height: 25px;
+}
+QPushButton:hover {
+    background-color: #FFE0E9;
+    border-color: #FF99B3;
+}
+QPushButton:pressed {
+    background-color: #FFB3C6;
+    font-size: 50px;
+}
+QGroupBox {
+    border: 2px solid #E6C9E6;
+    border-radius: 10px;
+    margin-top: 10px;
+    padding-top: 10px;
+    background-color: #FFFFFF;
+    font-weight: bold;
+    color: #7B5D7B;
+}
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+    padding: 5px 10px;
+    background-color: #F5E6F5;
+    border-radius: 5px;
+    color: #7B5D7B;
+    font-size: 50px;
+}
+QLabel {
+    color: #5A4A5D;
+    background-color: transparent;
+}
+QTabWidget::pane {
+    border: 2px solid #E6C9E6;
+    border-radius: 8px;
+    background-color: #FFFFFF;
+}
+QTabBar::tab {
+    background-color: #F5E6F5;
+    border: 2px solid #E6C9E6;
+    border-bottom: none;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    padding: 10px 25px;
+    margin-right: 2px;
+    color: #7B5D7B;
+    font-weight: bold;
+    min-width: 150px;
+}
+QTabBar::tab:selected {
+    background-color: #FFFFFF;
+    border-bottom: 2px solid #FFFFFF;
+}
+QTabBar::tab:hover {
+    background-color: #FFE0E9;
+}
+QComboBox {
+    background-color: #FFFFFF;
+    border: 2px solid #E6C9E6;
+    border-radius: 5px;
+    padding: 5px;
+    color: #5A4A5D;
+}
+QComboBox:hover {
+    border-color: #D4B3D4;
+}
+QSlider::groove:horizontal {
+    background: #E6C9E6;
+    height: 8px;
+    border-radius: 4px;
+}
+QSlider::handle:horizontal {
+    background: #FFB3C6;
+    border: 2px solid #FF99B3;
+    width: 18px;
+    margin: -5px 0;
+    border-radius: 9px;
+}
+QSlider::handle:horizontal:hover {
+    background: #FFD6E0;
+}</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
+     <widget class="QWidget" name="widget" native="true">
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <item>
+        <widget class="QTabWidget" name="tabWidget">
+         <property name="currentIndex">
+          <number>0</number>
+         </property>
+         <property name="usesScrollButtons">
+          <bool>false</bool>
+         </property>
+
+         <!-- ═══ TAB 1: Input + Histogram ═══ -->
+         <widget class="QWidget" name="tab">
+          <attribute name="title"><string>Input + Histogram</string></attribute>
+          <layout class="QVBoxLayout" name="verticalLayout">
+           <item>
+            <layout class="QHBoxLayout" name="buttonLayout">
+             <item>
+              <spacer name="horizontalSpacer">
+               <property name="orientation"><enum>Qt::Horizontal</enum></property>
+               <property name="sizeHint" stdset="0"><size><width>40</width><height>20</height></size></property>
+              </spacer>
+             </item>
+             <item>
+              <widget class="QPushButton" name="btn_reset">
+               <property name="text"><string>reset</string></property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="btn_convert_gray">
+               <property name="text"><string>convert to gray</string></property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="mainContentLayout">
+             <item>
+              <widget class="QGroupBox" name="groupBox">
+               <property name="title"><string>Original</string></property>
+               <layout class="QVBoxLayout" name="inputImageLayout">
+                <item>
+                 <widget class="QLabel" name="InputImage">
+                  <property name="text"><string>Double-click to load</string></property>
+                  <property name="alignment"><set>Qt::AlignCenter</set></property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QGroupBox" name="groupBox_4">
+               <property name="title"><string>Histogram</string></property>
+               <layout class="QVBoxLayout" name="inputHistogramLayout">
+                <item><widget class="QWidget" name="InputHistogram" native="true"/></item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QGroupBox" name="groupBox_5">
+               <property name="title"><string>CDF</string></property>
+               <layout class="QVBoxLayout" name="inputDistributionLayout">
+                <item><widget class="QWidget" name="InputDistribution" native="true"/></item>
+               </layout>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </widget>
+
+         <!-- ═══ TAB 2: Noise & Filters ═══ -->
+         <widget class="QWidget" name="tab_2">
+          <attribute name="title"><string>Noise &amp; Filters</string></attribute>
+          <layout class="QVBoxLayout" name="noise_mainLayout">
+           <item>
+            <layout class="QHBoxLayout" name="noise_controlsLayout">
+             <item><widget class="QLabel" name="noise_lbl_type"><property name="text"><string>Noise Type:</string></property></widget></item>
+             <item><widget class="QComboBox" name="noise_combo_type"/></item>
+             <item><widget class="QLabel" name="noise_lbl_amount"><property name="text"><string>Amount:</string></property></widget></item>
+             <item>
+              <widget class="QSlider" name="noise_slider_amount">
+               <property name="minimum"><number>0</number></property>
+               <property name="maximum"><number>100</number></property>
+               <property name="value"><number>20</number></property>
+               <property name="orientation"><enum>Qt::Horizontal</enum></property>
+              </widget>
+             </item>
+             <item><widget class="QPushButton" name="noise_btn_apply"><property name="text"><string>Apply Noise</string></property></widget></item>
+             <item><widget class="QLabel" name="filter_lbl_type"><property name="text"><string>Filter Type:</string></property></widget></item>
+             <item><widget class="QComboBox" name="noise_combo_filter"/></item>
+             <item><widget class="QPushButton" name="filter_btn_apply"><property name="text"><string>Apply Filter</string></property></widget></item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="noise_imageLayout">
+             <item>
+              <widget class="QGroupBox" name="noise_input_group">
+               <property name="title"><string>Input Image</string></property>
+               <layout class="QVBoxLayout" name="noise_input_layout">
+                <item>
+                 <widget class="QLabel" name="noise_input_image">
+                  <property name="minimumSize"><size><width>300</width><height>300</height></size></property>
+                  <property name="alignment"><set>Qt::AlignCenter</set></property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QGroupBox" name="noise_noisy_group">
+               <property name="title"><string>Noisy Image</string></property>
+               <layout class="QVBoxLayout" name="noise_noisy_layout">
+                <item><widget class="QLabel" name="noise_noisy_image"><property name="alignment"><set>Qt::AlignCenter</set></property></widget></item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QGroupBox" name="noise_filtered_group">
+               <property name="title"><string>Filtered Image</string></property>
+               <layout class="QVBoxLayout" name="noise_filtered_layout">
+                <item><widget class="QLabel" name="noise_filtered_image"><property name="alignment"><set>Qt::AlignCenter</set></property></widget></item>
+               </layout>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </widget>
+
+         <!-- ═══ TAB 3: Edge detection ═══ -->
+         <widget class="QWidget" name="tab_3">
+          <attribute name="title"><string>Edge detection</string></attribute>
+          <layout class="QVBoxLayout" name="edge_mainLayout">
+           <item>
+            <layout class="QHBoxLayout" name="edge_controlsLayout">
+             <item><widget class="QLabel" name="edge_label"><property name="text"><string>Select Edge Mask:</string></property></widget></item>
+             <item>
+              <widget class="QComboBox" name="edge_combo">
+               <property name="minimumSize"><size><width>150</width><height>0</height></size></property>
+              </widget>
+             </item>
+             <item>
+              <spacer name="edge_spacer">
+               <property name="orientation"><enum>Qt::Horizontal</enum></property>
+               <property name="sizeHint" stdset="0"><size><width>40</width><height>20</height></size></property>
+              </spacer>
+             </item>
+             <item>
+              <widget class="QPushButton" name="edge_btn_apply">
+               <property name="text"><string>Apply Mask</string></property>
+               <property name="minimumSize"><size><width>120</width><height>30</height></size></property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <widget class="QGroupBox" name="edge_input_group">
+             <property name="title"><string>Input Image</string></property>
+             <layout class="QVBoxLayout" name="edge_input_layout">
+              <item>
+               <widget class="QLabel" name="edge_input_image">
+                <property name="minimumSize"><size><width>0</width><height>300</height></size></property>
+                <property name="text"><string>Double-click to load image</string></property>
+                <property name="alignment"><set>Qt::AlignCenter</set></property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="edge_resultsLayout">
+             <item>
+              <widget class="QGroupBox" name="edge_magnitude_group">
+               <property name="title"><string>Magnitude</string></property>
+               <layout class="QVBoxLayout" name="edge_magnitude_layout">
+                <item>
+                 <widget class="QLabel" name="edge_output_image">
+                  <property name="minimumSize"><size><width>0</width><height>250</height></size></property>
+                  <property name="text"><string/></property>
+                  <property name="alignment"><set>Qt::AlignCenter</set></property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QGroupBox" name="edge_grad_x_group">
+               <property name="title"><string>Gradient X</string></property>
+               <layout class="QVBoxLayout" name="edge_grad_x_layout">
+                <item>
+                 <widget class="QLabel" name="edge_gradient_x_image">
+                  <property name="minimumSize"><size><width>0</width><height>250</height></size></property>
+                  <property name="text"><string/></property>
+                  <property name="alignment"><set>Qt::AlignCenter</set></property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QGroupBox" name="edge_grad_y_group">
+               <property name="title"><string>Gradient Y</string></property>
+               <layout class="QVBoxLayout" name="edge_grad_y_layout">
+                <item>
+                 <widget class="QLabel" name="edge_gradient_y_image">
+                  <property name="minimumSize"><size><width>0</width><height>250</height></size></property>
+                  <property name="text"><string/></property>
+                  <property name="alignment"><set>Qt::AlignCenter</set></property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </widget>
+
+         <!-- ═══ TAB 4: Normalization & Equalization ═══ -->
+         <widget class="QWidget" name="tab_5">
+          <attribute name="title"><string>Norm + Equalize</string></attribute>
+          <layout class="QVBoxLayout" name="normeq_mainLayout">
+           
+           <!-- ROW 1: Original Image + Histogram -->
+           <item>
+            <layout class="QHBoxLayout" name="normeq_originalLayout">
+             <item>
+              <widget class="QGroupBox" name="normeq_input_group">
+               <property name="title"><string>Original Image (double-click to load)</string></property>
+               <layout class="QVBoxLayout" name="normeq_input_layout">
+                <item>
+                 <widget class="QLabel" name="normalize_input_image">
+                  <property name="minimumSize"><size><width>300</width><height>250</height></size></property>
+                  <property name="text"><string>Double-click to load image</string></property>
+                  <property name="alignment"><set>Qt::AlignCenter</set></property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QGroupBox" name="normeq_input_hist_group">
+               <property name="title"><string>Original Histogram</string></property>
+               <layout class="QVBoxLayout" name="normeq_input_hist_layout">
+                <item>
+                 <widget class="QWidget" name="normalize_input_histogram" native="true">
+                  <property name="minimumSize"><size><width>300</width><height>250</height></size></property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+            </layout>
+           </item>
+
+           <!-- ROW 2: Normalized Image + Histogram -->
+           <item>
+            <layout class="QHBoxLayout" name="normeq_normalizedLayout">
+             <item>
+              <widget class="QGroupBox" name="normalize_output_group">
+               <property name="title"><string>Normalized Image</string></property>
+               <layout class="QVBoxLayout" name="normalize_output_layout">
+                <item>
+                 <widget class="QLabel" name="normalize_output_image">
+                  <property name="minimumSize"><size><width>300</width><height>250</height></size></property>
+                  <property name="text"><string/></property>
+                  <property name="alignment"><set>Qt::AlignCenter</set></property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QGroupBox" name="normalize_output_hist_group">
+               <property name="title"><string>Normalized Histogram</string></property>
+               <layout class="QVBoxLayout" name="normalize_output_hist_layout">
+                <item>
+                 <widget class="QWidget" name="normalize_output_histogram" native="true">
+                  <property name="minimumSize"><size><width>300</width><height>250</height></size></property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+            </layout>
+           </item>
+
+           <!-- ROW 3: Equalized Image + Histogram -->
+           <item>
+            <layout class="QHBoxLayout" name="normeq_equalizedLayout">
+             <item>
+              <widget class="QGroupBox" name="equalization_output_group">
+               <property name="title"><string>Equalized Image</string></property>
+               <layout class="QVBoxLayout" name="equalization_output_layout">
+                <item>
+                 <widget class="QLabel" name="equalization_output_image">
+                  <property name="minimumSize"><size><width>300</width><height>250</height></size></property>
+                  <property name="text"><string/></property>
+                  <property name="alignment"><set>Qt::AlignCenter</set></property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QGroupBox" name="equalization_output_hist_group">
+               <property name="title"><string>Equalized Histogram</string></property>
+               <layout class="QVBoxLayout" name="equalization_output_hist_layout">
+                <item>
+                 <widget class="QWidget" name="equalization_output_histogram" native="true">
+                  <property name="minimumSize"><size><width>300</width><height>250</height></size></property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+            </layout>
+           </item>
+
+          </layout>
+         </widget>
+
+         <!-- ═══ TAB 6: Hybrid Images (REDESIGNED) ═══ -->
+         <widget class="QWidget" name="tab_4">
+          <attribute name="title"><string>Hybrid Images</string></attribute>
+          <layout class="QVBoxLayout" name="hybrid_mainLayout">
+
+           <!-- ROW 1: Two input images -->
+           <item>
+            <layout class="QHBoxLayout" name="hybrid_inputImagesLayout">
+
+             <item>
+              <widget class="QGroupBox" name="hybrid_groupBox_img1">
+               <property name="title"><string>Image 1</string></property>
+               <property name="minimumSize"><size><width>0</width><height>220</height></size></property>
+               <layout class="QVBoxLayout" name="hybrid_img1Layout">
+                <item>
+                 <widget class="QLabel" name="hybrid_label_img1">
+                  <property name="text"><string>Double-click to load image</string></property>
+                  <property name="alignment"><set>Qt::AlignCenter</set></property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+
+             <item>
+              <widget class="QGroupBox" name="hybrid_groupBox_img2">
+               <property name="title"><string>Image 2</string></property>
+               <property name="minimumSize"><size><width>0</width><height>220</height></size></property>
+               <layout class="QVBoxLayout" name="hybrid_img2Layout">
+                <item>
+                 <widget class="QLabel" name="hybrid_label_img2">
+                  <property name="text"><string>Double-click to load image</string></property>
+                  <property name="alignment"><set>Qt::AlignCenter</set></property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+
+            </layout>
+           </item>
+
+           <!-- ROW 2: Two control panels side by side -->
+           <item>
+            <layout class="QHBoxLayout" name="hybrid_bothControlsLayout">
+
+             <!-- Image 1 Controls -->
+             <item>
+              <widget class="QGroupBox" name="hybrid_groupBox_ctrl1">
+               <property name="title"><string>Image 1 Filter Settings</string></property>
+               <layout class="QVBoxLayout" name="hybrid_ctrl1Layout">
+
+                <!-- Filter type row -->
+                <item>
+                 <layout class="QHBoxLayout" name="hybrid_filter1Row">
+                  <item>
+                   <widget class="QLabel" name="hybrid_lbl_filter1">
+                    <property name="text"><string>Filter Type:</string></property>
+                    <property name="minimumSize"><size><width>80</width><height>0</height></size></property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QComboBox" name="hybrid_combo_filter1"/>
+                  </item>
+                 </layout>
+                </item>
+
+                <!-- Cutoff slider row -->
+                <item>
+                 <layout class="QHBoxLayout" name="hybrid_cutoff1Row">
+                  <item>
+                   <widget class="QLabel" name="hybrid_lbl_cutoff1">
+                    <property name="text"><string>Cutoff:</string></property>
+                    <property name="minimumSize"><size><width>80</width><height>0</height></size></property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QSlider" name="hybrid_slider_cutoff1">
+                    <property name="minimum"><number>1</number></property>
+                    <property name="maximum"><number>100</number></property>
+                    <property name="value"><number>30</number></property>
+                    <property name="orientation"><enum>Qt::Horizontal</enum></property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLabel" name="hybrid_label_cutoff1_val">
+                    <property name="text"><string>30</string></property>
+                    <property name="minimumSize"><size><width>30</width><height>0</height></size></property>
+                    <property name="alignment"><set>Qt::AlignCenter</set></property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+
+               </layout>
+              </widget>
+             </item>
+
+             <!-- Image 2 Controls -->
+             <item>
+              <widget class="QGroupBox" name="hybrid_groupBox_ctrl2">
+               <property name="title"><string>Image 2 Filter Settings</string></property>
+               <layout class="QVBoxLayout" name="hybrid_ctrl2Layout">
+
+                <!-- Filter type row -->
+                <item>
+                 <layout class="QHBoxLayout" name="hybrid_filter2Row">
+                  <item>
+                   <widget class="QLabel" name="hybrid_lbl_filter2">
+                    <property name="text"><string>Filter Type:</string></property>
+                    <property name="minimumSize"><size><width>80</width><height>0</height></size></property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QComboBox" name="hybrid_combo_filter2"/>
+                  </item>
+                 </layout>
+                </item>
+
+                <!-- Cutoff slider row -->
+                <item>
+                 <layout class="QHBoxLayout" name="hybrid_cutoff2Row">
+                  <item>
+                   <widget class="QLabel" name="hybrid_lbl_cutoff2">
+                    <property name="text"><string>Cutoff:</string></property>
+                    <property name="minimumSize"><size><width>80</width><height>0</height></size></property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QSlider" name="hybrid_slider_cutoff2">
+                    <property name="minimum"><number>1</number></property>
+                    <property name="maximum"><number>100</number></property>
+                    <property name="value"><number>20</number></property>
+                    <property name="orientation"><enum>Qt::Horizontal</enum></property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLabel" name="hybrid_label_cutoff2_val">
+                    <property name="text"><string>20</string></property>
+                    <property name="minimumSize"><size><width>30</width><height>0</height></size></property>
+                    <property name="alignment"><set>Qt::AlignCenter</set></property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+
+               </layout>
+              </widget>
+             </item>
+
+            </layout>
+           </item>
+
+           <!-- ROW 3: Alpha + Button -->
+           <item>
+            <layout class="QHBoxLayout" name="hybrid_alphaButtonRow">
+             <item>
+              <widget class="QLabel" name="hybrid_lbl_alpha">
+               <property name="text"><string>Alpha (blend weight):</string></property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSlider" name="hybrid_slider_alpha">
+               <property name="minimum"><number>0</number></property>
+               <property name="maximum"><number>100</number></property>
+               <property name="value"><number>50</number></property>
+               <property name="orientation"><enum>Qt::Horizontal</enum></property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="hybrid_label_alpha_val">
+               <property name="text"><string>0.50</string></property>
+               <property name="minimumSize"><size><width>35</width><height>0</height></size></property>
+               <property name="alignment"><set>Qt::AlignCenter</set></property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="hybrid_btn_create">
+               <property name="text"><string>Create Hybrid Image</string></property>
+               <property name="minimumSize"><size><width>160</width><height>30</height></size></property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+
+           <!-- ROW 4: Single hybrid result box -->
+           <item>
+            <widget class="QGroupBox" name="hybrid_groupBox_result">
+             <property name="title"><string>Hybrid Result</string></property>
+             <property name="minimumSize"><size><width>0</width><height>220</height></size></property>
+             <layout class="QVBoxLayout" name="hybrid_resultLayout">
+              <item>
+               <widget class="QLabel" name="hybrid_label_result">
+                <property name="text"><string/></property>
+                <property name="alignment"><set>Qt::AlignCenter</set></property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+
+          </layout>
+         </widget>
+         <!-- ═══ END Hybrid Images tab ═══ -->
+
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect><x>0</x><y>0</y><width>1118</width><height>26</height></rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

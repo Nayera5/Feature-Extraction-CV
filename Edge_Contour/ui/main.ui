@@ -1,0 +1,637 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+    <class>MainWindow</class>
+    <widget class="QMainWindow" name="MainWindow">
+        <property name="geometry">
+            <rect>
+                <x>0</x>
+                <y>0</y>
+                <width>1280</width>
+                <height>800</height>
+            </rect>
+        </property>
+        <property name="windowTitle">
+            <string>Edge &amp; Contour Lab — Group Project</string>
+        </property>
+        <widget class="QWidget" name="centralwidget">
+            <layout class="QVBoxLayout" name="verticalLayoutMain">
+                <item>
+                    <widget class="QTabWidget" name="tabWidget">
+                        <property name="documentMode">
+                            <bool>true</bool>
+                        </property>
+
+                        <!-- ═══════════════════════════════════════════════════════ CANNY TAB -->
+                        <widget class="QWidget" name="tabCanny">
+                            <attribute name="title"><string>Canny Edges</string></attribute>
+                            <layout class="QHBoxLayout" name="layoutCannyPage">
+                                <item>
+                                    <widget class="QWidget" name="cannyControlsWidget" native="true">
+                                        <property name="minimumSize"><size><width>400</width><height>0</height></size></property>
+                                        <property name="maximumSize"><size><width>400</width><height>16777215</height></size></property>
+                                        <layout class="QVBoxLayout" name="layoutCannyControls">
+                                            <item>
+                                                <widget class="QGroupBox" name="cannyImageGroup">
+                                                    <property name="title"><string>Image</string></property>
+                                                    <layout class="QVBoxLayout" name="layoutCannyImageGroup">
+                                                        <item>
+                                                            <widget class="QPushButton" name="cannyOpenBtn">
+                                                                <property name="text"><string>📂 Load Image</string></property>
+                                                            </widget>
+                                                        </item>
+                                                        <item>
+                                                            <widget class="QLabel" name="cannyImageNameLbl">
+                                                                <property name="text"><string>No image selected</string></property>
+                                                                <property name="wordWrap"><bool>true</bool></property>
+                                                            </widget>
+                                                        </item>
+                                                    </layout>
+                                                </widget>
+                                            </item>
+                                            <item>
+                                                <widget class="QGroupBox" name="cannyGaussianGroup">
+                                                    <property name="title"><string>Gaussian Blur</string></property>
+                                                    <layout class="QGridLayout" name="layoutCannyGaussian">
+                                                        <item row="0" column="0">
+                                                            <widget class="QLabel" name="cannyKernelLbl">
+                                                                <property name="text"><string>Kernel size:</string></property>
+                                                            </widget>
+                                                        </item>
+                                                        <item row="0" column="1">
+                                                            <widget class="QSpinBox" name="cannyKernelSpin">
+                                                                <property name="minimum"><number>3</number></property>
+                                                                <property name="maximum"><number>21</number></property>
+                                                                <property name="singleStep"><number>2</number></property>
+                                                                <property name="value"><number>3</number></property>
+                                                            </widget>
+                                                        </item>
+                                                        <item row="1" column="0">
+                                                            <widget class="QLabel" name="cannySigmaLbl">
+                                                                <property name="text"><string>Sigma:</string></property>
+                                                            </widget>
+                                                        </item>
+                                                        <item row="1" column="1">
+                                                            <widget class="QDoubleSpinBox" name="cannySigmaSpin">
+                                                                <property name="minimum"><double>0.100000000000000</double></property>
+                                                                <property name="maximum"><double>10.000000000000000</double></property>
+                                                                <property name="singleStep"><double>0.100000000000000</double></property>
+                                                                <property name="value"><double>1.400000000000000</double></property>
+                                                            </widget>
+                                                        </item>
+                                                    </layout>
+                                                </widget>
+                                            </item>
+                                            <item>
+                                                <widget class="QGroupBox" name="cannyThresholdGroup">
+                                                    <property name="title"><string>Double Threshold</string></property>
+                                                    <layout class="QGridLayout" name="layoutCannyThreshold">
+                                                        <item row="0" column="0">
+                                                            <widget class="QLabel" name="cannyLowLbl">
+                                                                <property name="text"><string>Low ratio:</string></property>
+                                                            </widget>
+                                                        </item>
+                                                        <item row="0" column="1">
+                                                            <widget class="QDoubleSpinBox" name="cannyLowSpin">
+                                                                <property name="minimum"><double>0.010000000000000</double></property>
+                                                                <property name="maximum"><double>0.490000000000000</double></property>
+                                                                <property name="singleStep"><double>0.010000000000000</double></property>
+                                                                <property name="decimals"><number>3</number></property>
+                                                                <property name="value"><double>0.050000000000000</double></property>
+                                                            </widget>
+                                                        </item>
+                                                        <item row="1" column="0">
+                                                            <widget class="QLabel" name="cannyHighLbl">
+                                                                <property name="text"><string>High ratio:</string></property>
+                                                            </widget>
+                                                        </item>
+                                                        <item row="1" column="1">
+                                                            <widget class="QDoubleSpinBox" name="cannyHighSpin">
+                                                                <property name="minimum"><double>0.020000000000000</double></property>
+                                                                <property name="maximum"><double>0.990000000000000</double></property>
+                                                                <property name="singleStep"><double>0.010000000000000</double></property>
+                                                                <property name="decimals"><number>3</number></property>
+                                                                <property name="value"><double>0.150000000000000</double></property>
+                                                            </widget>
+                                                        </item>
+                                                    </layout>
+                                                </widget>
+                                            </item>
+                                            <item>
+                                                <widget class="QPushButton" name="cannyRunBtn">
+                                                    <property name="enabled"><bool>false</bool></property>
+                                                    <property name="minimumSize"><size><width>0</width><height>40</height></size></property>
+                                                    <property name="text"><string>▶  Run Canny</string></property>
+                                                </widget>
+                                            </item>
+                                            <item>
+                                                <widget class="QPushButton" name="cannySaveBtn">
+                                                    <property name="enabled"><bool>false</bool></property>
+                                                    <property name="text"><string>💾  Save Edge Map</string></property>
+                                                </widget>
+                                            </item>
+                                            <item>
+                                                <widget class="QGroupBox" name="cannyStatsGroup">
+                                                    <property name="title"><string>Statistics</string></property>
+                                                    <layout class="QVBoxLayout" name="layoutCannyStats">
+                                                        <item>
+                                                            <widget class="QLabel" name="cannyStatsLbl">
+                                                                <property name="text"><string>—</string></property>
+                                                                <property name="wordWrap"><bool>true</bool></property>
+                                                            </widget>
+                                                        </item>
+                                                    </layout>
+                                                </widget>
+                                            </item>
+                                            <item>
+                                                <spacer name="verticalSpacerCanny">
+                                                    <property name="orientation"><enum>Qt::Vertical</enum></property>
+                                                    <property name="sizeHint" stdset="0"><size><width>20</width><height>40</height></size></property>
+                                                </spacer>
+                                            </item>
+                                        </layout>
+                                    </widget>
+                                </item>
+                                <item>
+                                    <widget class="QWidget" name="cannyViewWidget" native="true">
+                                        <layout class="QVBoxLayout" name="layoutCannyView">
+                                            <item>
+                                                <layout class="QHBoxLayout" name="layoutCannyHeader">
+                                                    <item>
+                                                        <widget class="QLabel" name="cannyStageLbl">
+                                                            <property name="text"><string>Pipeline stage:</string></property>
+                                                        </widget>
+                                                    </item>
+                                                    <item>
+                                                        <widget class="QComboBox" name="cannyStageCombo"/>
+                                                    </item>
+                                                    <item>
+                                                        <spacer name="horizontalSpacerCannyHeader">
+                                                            <property name="orientation"><enum>Qt::Horizontal</enum></property>
+                                                            <property name="sizeHint" stdset="0"><size><width>40</width><height>20</height></size></property>
+                                                        </spacer>
+                                                    </item>
+                                                </layout>
+                                            </item>
+                                            <item>
+                                                <widget class="QLabel" name="cannyImageHost">
+                                                    <property name="minimumSize"><size><width>400</width><height>300</height></size></property>
+                                                    <property name="alignment"><set>Qt::AlignCenter</set></property>
+                                                    <property name="text"><string>No image loaded</string></property>
+                                                </widget>
+                                            </item>
+                                        </layout>
+                                    </widget>
+                                </item>
+                            </layout>
+                        </widget>
+
+                        <!-- ══════════════════════════════════════════════════════ SHAPES TAB -->
+                        <widget class="QWidget" name="tabShapes">
+                            <attribute name="title"><string>Shapes </string></attribute>
+                            <layout class="QHBoxLayout" name="layoutShapesPage">
+                                <item>
+                                    <widget class="QWidget" name="shapesControlsWidget" native="true">
+                                        <property name="minimumSize"><size><width>400</width><height>0</height></size></property>
+                                        <property name="maximumSize"><size><width>400</width><height>16777215</height></size></property>
+                                        <layout class="QVBoxLayout" name="layoutShapesControls">
+                                            <item>
+                                                <widget class="QGroupBox" name="shapesImageGroup">
+                                                    <property name="title"><string>Image</string></property>
+                                                    <layout class="QVBoxLayout" name="layoutShapesImageGroup">
+                                                        <item>
+                                                            <widget class="QPushButton" name="shapesOpenBtn">
+                                                                <property name="text"><string>📂 Load Image</string></property>
+                                                            </widget>
+                                                        </item>
+                                                        <item>
+                                                            <widget class="QLabel" name="shapesImageNameLbl">
+                                                                <property name="text"><string>No image selected</string></property>
+                                                                <property name="wordWrap"><bool>true</bool></property>
+                                                            </widget>
+                                                        </item>
+                                                    </layout>
+                                                </widget>
+                                            </item>
+                                            <item>
+                                                <widget class="QGroupBox" name="shapesCanny">
+                                                    <property name="title"><string>Canny Edge Detection</string></property>
+                                                    <layout class="QGridLayout" name="layoutShapesCanny">
+                                                        <item row="0" column="0">
+                                                            <widget class="QLabel" name="shapesKernelLbl">
+                                                                <property name="text"><string>Kernel size:</string></property>
+                                                            </widget>
+                                                        </item>
+                                                        <item row="0" column="1">
+                                                            <widget class="QSpinBox" name="shapesKernelSpin">
+                                                                <property name="minimum"><number>3</number></property>
+                                                                <property name="maximum"><number>21</number></property>
+                                                                <property name="singleStep"><number>2</number></property>
+                                                                <property name="value"><number>3</number></property>
+                                                            </widget>
+                                                        </item>
+                                                        <item row="1" column="0">
+                                                            <widget class="QLabel" name="shapesSigmaLbl">
+                                                                <property name="text"><string>Sigma:</string></property>
+                                                            </widget>
+                                                        </item>
+                                                        <item row="1" column="1">
+                                                            <widget class="QDoubleSpinBox" name="shapesSigmaSpin">
+                                                                <property name="decimals"><number>2</number></property>
+                                                                <property name="singleStep"><double>0.10000000000000</double></property>
+                                                                <property name="value"><double>1.40000000000000</double></property>
+                                                            </widget>
+                                                        </item>
+                                                        <item row="2" column="0">
+                                                            <widget class="QLabel" name="shapesLowLbl">
+                                                                <property name="text"><string>Low ratio:</string></property>
+                                                            </widget>
+                                                        </item>
+                                                        <item row="2" column="1">
+                                                            <widget class="QDoubleSpinBox" name="shapesLowSpin">
+                                                                <property name="decimals"><number>3</number></property>
+                                                                <property name="maximum"><double>1.000000000000000</double></property>
+                                                                <property name="singleStep"><double>0.010000000000000</double></property>
+                                                                <property name="value"><double>0.050000000000000</double></property>
+                                                            </widget>
+                                                        </item>
+                                                        <item row="3" column="0">
+                                                            <widget class="QLabel" name="shapesHighLbl">
+                                                                <property name="text"><string>High ratio:</string></property>
+                                                            </widget>
+                                                        </item>
+                                                        <item row="3" column="1">
+                                                            <widget class="QDoubleSpinBox" name="shapesHighSpin">
+                                                                <property name="decimals"><number>3</number></property>
+                                                                <property name="maximum"><double>1.000000000000000</double></property>
+                                                                <property name="singleStep"><double>0.010000000000000</double></property>
+                                                                <property name="value"><double>0.150000000000000</double></property>
+                                                            </widget>
+                                                        </item>
+                                                    </layout>
+                                                </widget>
+                                            </item>
+                                            <item>
+                                                <widget class="QGroupBox" name="shapesDetectionTypeGroup">
+                                                    <property name="title"><string>Detection Type</string></property>
+                                                    <layout class="QVBoxLayout" name="layoutShapesDetectionType">
+                                                        <item>
+                                                            <widget class="QComboBox" name="shapesDetectionTypeCombo">
+                                                                <item><property name="text"><string>Line Detection</string></property></item>
+                                                                <item><property name="text"><string>Circle Detection</string></property></item>
+                                                                <item><property name="text"><string>Ellipse Detection</string></property></item>
+                                                            </widget>
+                                                        </item>
+                                                    </layout>
+                                                </widget>
+                                            </item>
+                                            <item>
+                                                <widget class="QGroupBox" name="shapesHoughGroup">
+                                                    <property name="title"><string>Parameters</string></property>
+                                                    <layout class="QGridLayout" name="layoutShapesHough">
+                                                        <item row="0" column="0">
+                                                            <widget class="QLabel" name="shapesThresholdLbl">
+                                                                <property name="text"><string>Threshold (%):</string></property>
+                                                            </widget>
+                                                        </item>
+                                                        <item row="0" column="1">
+                                                            <widget class="QSpinBox" name="shapesThresholdSpin">
+                                                                <property name="minimum"><number>10</number></property>
+                                                                <property name="maximum"><number>100</number></property>
+                                                                <property name="singleStep"><number>10</number></property>
+                                                                <property name="value"><number>90</number></property>
+                                                            </widget>
+                                                        </item>
+                                                    </layout>
+                                                </widget>
+                                            </item>
+                                            <item>
+                                                <widget class="QPushButton" name="shapesDetectBtn">
+                                                    <property name="enabled"><bool>false</bool></property>
+                                                    <property name="minimumSize"><size><width>0</width><height>40</height></size></property>
+                                                    <property name="text"><string>▶  Detect Lines</string></property>
+                                                </widget>
+                                            </item>
+                                            <item>
+                                                <widget class="QPushButton" name="shapesSaveBtn">
+                                                    <property name="enabled"><bool>false</bool></property>
+                                                    <property name="text"><string>💾 Save Result</string></property>
+                                                </widget>
+                                            </item>
+                                            <item>
+                                                <widget class="QLabel" name="shapesStatsLbl">
+                                                    <property name="text"><string>Load image to begin</string></property>
+                                                    <property name="wordWrap"><bool>true</bool></property>
+                                                </widget>
+                                            </item>
+                                            <item>
+                                                <spacer name="verticalSpacerShapes">
+                                                    <property name="orientation"><enum>Qt::Vertical</enum></property>
+                                                    <property name="sizeHint" stdset="0"><size><width>20</width><height>40</height></size></property>
+                                                </spacer>
+                                            </item>
+                                        </layout>
+                                    </widget>
+                                </item>
+                                <item>
+                                    <widget class="QLabel" name="shapesImageHost">
+                                        <property name="text"><string>Image will appear here</string></property>
+                                        <property name="alignment"><set>Qt::AlignCenter</set></property>
+                                    </widget>
+                                </item>
+                            </layout>
+                        </widget>
+
+                        <!-- ═══════════════════════════════════════════════════════ SNAKE TAB -->
+                        <widget class="QWidget" name="tabSnake">
+                            <attribute name="title"><string> Active contour </string></attribute>
+                            <layout class="QHBoxLayout" name="layoutSnakePage">
+
+                                <!-- ── Left controls panel ──────────────────────────────────────── -->
+                                <item>
+                                    <widget class="QWidget" name="snakeControlsWidget" native="true">
+                                        <property name="minimumSize"><size><width>400</width><height>0</height></size></property>
+                                        <property name="maximumSize"><size><width>400</width><height>16777215</height></size></property>
+                                        <layout class="QVBoxLayout" name="layoutSnakeControls">
+
+                                            <item>
+                                                <widget class="QGroupBox" name="snakeImageGroup">
+                                                    <property name="title"><string>Image</string></property>
+                                                    <layout class="QVBoxLayout" name="layoutSnakeImageGroup">
+                                                        <item>
+                                                            <widget class="QPushButton" name="snakeOpenBtn">
+                                                                <property name="text"><string>📂  Load Image</string></property>
+                                                            </widget>
+                                                        </item>
+                                                        <item>
+                                                            <widget class="QLabel" name="snakeImageNameLbl">
+                                                                <property name="text"><string>No image</string></property>
+                                                                <property name="wordWrap"><bool>true</bool></property>
+                                                            </widget>
+                                                        </item>
+                                                    </layout>
+                                                </widget>
+                                            </item>
+
+                                            <item>
+                                                <widget class="QGroupBox" name="snakeParamsGroup">
+                                                    <property name="title"><string>Snake</string></property>
+                                                    <layout class="QGridLayout" name="layoutSnakeParams">
+                                                        <item row="0" column="0">
+                                                            <widget class="QLabel" name="snakePointsLbl">
+                                                                <property name="text"><string>Points</string></property>
+                                                            </widget>
+                                                        </item>
+                                                        <item row="0" column="1">
+                                                            <widget class="QSpinBox" name="snakePointsSpin">
+                                                                <property name="minimum"><number>20</number></property>
+                                                                <property name="maximum"><number>300</number></property>
+                                                                <property name="value"><number>80</number></property>
+                                                            </widget>
+                                                        </item>
+                                                        <item row="1" column="0">
+                                                            <widget class="QLabel" name="snakeItersLbl">
+                                                                <property name="text"><string>Iterations</string></property>
+                                                            </widget>
+                                                        </item>
+                                                        <item row="1" column="1">
+                                                            <widget class="QSpinBox" name="snakeItersSpin">
+                                                                <property name="minimum"><number>1</number></property>
+                                                                <property name="maximum"><number>500</number></property>
+                                                                <property name="value"><number>100</number></property>
+                                                            </widget>
+                                                        </item>
+                                                        <item row="2" column="0">
+                                                            <widget class="QLabel" name="snakeAlphaLbl">
+                                                                <property name="text"><string>Alpha</string></property>
+                                                            </widget>
+                                                        </item>
+                                                        <item row="2" column="1">
+                                                            <widget class="QDoubleSpinBox" name="snakeAlphaSpin">
+                                                                <property name="decimals"><number>3</number></property>
+                                                                <property name="singleStep"><double>0.010000000000000</double></property>
+                                                                <property name="maximum"><double>5.000000000000000</double></property>
+                                                                <property name="value"><double>0.100000000000000</double></property>
+                                                            </widget>
+                                                        </item>
+                                                        <item row="3" column="0">
+                                                            <widget class="QLabel" name="snakeBetaLbl">
+                                                                <property name="text"><string>Beta</string></property>
+                                                            </widget>
+                                                        </item>
+                                                        <item row="3" column="1">
+                                                            <widget class="QDoubleSpinBox" name="snakeBetaSpin">
+                                                                <property name="decimals"><number>3</number></property>
+                                                                <property name="singleStep"><double>0.010000000000000</double></property>
+                                                                <property name="maximum"><double>5.000000000000000</double></property>
+                                                                <property name="value"><double>0.100000000000000</double></property>
+                                                            </widget>
+                                                        </item>
+                                                    </layout>
+                                                </widget>
+                                            </item>
+
+                                            <item>
+                                                <widget class="QPushButton" name="snakeRunBtn">
+                                                    <property name="enabled"><bool>false</bool></property>
+                                                    <property name="minimumSize"><size><width>0</width><height>40</height></size></property>
+                                                    <property name="text"><string>▶  Run Snake</string></property>
+                                                </widget>
+                                            </item>
+
+                                            <item>
+                                                <widget class="QPushButton" name="snakeClearBtn">
+                                                    <property name="enabled"><bool>false</bool></property>
+                                                    <property name="text"><string>✕  Clear Circle</string></property>
+                                                </widget>
+                                            </item>
+
+                                            <item>
+                                                <widget class="QLabel" name="snakeStatusLbl">
+                                                    <property name="text"><string>Load image and draw circle</string></property>
+                                                    <property name="wordWrap"><bool>true</bool></property>
+                                                </widget>
+                                            </item>
+
+                                            <!-- ── Chain Code & Measurements group (export btn first, then stats) -->
+                                            <item>
+                                                <widget class="QGroupBox" name="contourMeasGroup">
+                                                    <property name="title"><string>Chain Code &amp; Measurements</string></property>
+                                                    <layout class="QGridLayout" name="layoutContourMeas">
+
+                                                        <!-- row 0: export button spanning both columns -->
+                                                        <item row="0" column="0" colspan="2">
+                                                            <widget class="QPushButton" name="contourExportBtn">
+                                                                <property name="enabled"><bool>false</bool></property>
+                                                                <property name="text"><string>💾  Export Chain Code &amp; Measurements</string></property>
+                                                            </widget>
+                                                        </item>
+
+                                                        <!-- row 1: points -->
+                                                        <item row="1" column="0">
+                                                            <widget class="QLabel">
+                                                                <property name="text"><string>Points:</string></property>
+                                                            </widget>
+                                                        </item>
+                                                        <item row="1" column="1">
+                                                            <widget class="QLabel" name="contourPointsVal">
+                                                                <property name="text"><string>—</string></property>
+                                                            </widget>
+                                                        </item>
+
+                                                        <!-- row 2: perimeter -->
+                                                        <item row="2" column="0">
+                                                            <widget class="QLabel">
+                                                                <property name="text"><string>Perimeter:</string></property>
+                                                            </widget>
+                                                        </item>
+                                                        <item row="2" column="1">
+                                                            <widget class="QLabel" name="contourPerimeterVal">
+                                                                <property name="text"><string>—</string></property>
+                                                            </widget>
+                                                        </item>
+
+                                                        <!-- row 3: area -->
+                                                        <item row="3" column="0">
+                                                            <widget class="QLabel">
+                                                                <property name="text"><string>Area:</string></property>
+                                                            </widget>
+                                                        </item>
+                                                        <item row="3" column="1">
+                                                            <widget class="QLabel" name="contourAreaVal">
+                                                                <property name="text"><string>—</string></property>
+                                                            </widget>
+                                                        </item>
+
+                                                    </layout>
+                                                </widget>
+                                            </item>
+
+                                            <item>
+                                                <spacer name="verticalSpacerSnake">
+                                                    <property name="orientation"><enum>Qt::Vertical</enum></property>
+                                                    <property name="sizeHint" stdset="0"><size><width>20</width><height>40</height></size></property>
+                                                </spacer>
+                                            </item>
+
+                                        </layout>
+                                    </widget>
+                                </item>
+
+                                <!-- ── Right: canvas + chain code labels below ──────────────────── -->
+                                <item>
+                                    <widget class="QWidget" name="snakeViewWidget" native="true">
+                                        <property name="sizePolicy">
+                                            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                                                <horstretch>1</horstretch><verstretch>1</verstretch>
+                                            </sizepolicy>
+                                        </property>
+                                        <layout class="QVBoxLayout" name="layoutSnakeView">
+
+                                            <!-- Canvas -->
+                                            <item>
+                                                <widget class="QLabel" name="snakeCanvasHost">
+                                                    <property name="sizePolicy">
+                                                        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                                                            <horstretch>1</horstretch><verstretch>1</verstretch>
+                                                        </sizepolicy>
+                                                    </property>
+                                                    <property name="minimumSize"><size><width>420</width><height>340</height></size></property>
+                                                    <property name="text"><string>Load image, then drag to draw circle</string></property>
+                                                    <property name="alignment"><set>Qt::AlignCenter</set></property>
+                                                </widget>
+                                            </item>
+
+                                            <!-- Legend -->
+                                            <item>
+                                                <widget class="QLabel" name="snakeLegendLbl">
+                                                    <property name="text"><string>Green: initial  |  Blue: evolved</string></property>
+                                                </widget>
+                                            </item>
+
+                                            <!-- Chain code row — label style, word-wrapping value -->
+                                            <item>
+                                                <layout class="QHBoxLayout" name="layoutChainCodeRow">
+                                                    <item>
+                                                        <widget class="QLabel" name="contourCodeKeyLbl">
+                                                            <property name="text"><string>Chain code:</string></property>
+                                                            <property name="minimumSize"><size><width>100</width><height>0</height></size></property>
+                                                            <property name="maximumSize"><size><width>100</width><height>16777215</height></size></property>
+                                                            <property name="alignment"><set>Qt::AlignTop|Qt::AlignLeft</set></property>
+                                                        </widget>
+                                                    </item>
+                                                    <item>
+                                                        <widget class="QLabel" name="contourCodeVal">
+                                                            <property name="text"><string>—</string></property>
+                                                            <property name="wordWrap"><bool>true</bool></property>
+                                                            <property name="alignment"><set>Qt::AlignTop|Qt::AlignLeft</set></property>
+                                                        </widget>
+                                                    </item>
+                                                </layout>
+                                            </item>
+
+                                            <!-- First-difference row — same label style -->
+                                            <item>
+                                                <layout class="QHBoxLayout" name="layoutDiffCodeRow">
+                                                    <item>
+                                                        <widget class="QLabel" name="contourDiffKeyLbl">
+                                                            <property name="text"><string>1st difference:</string></property>
+                                                            <property name="minimumSize"><size><width>100</width><height>0</height></size></property>
+                                                            <property name="maximumSize"><size><width>100</width><height>16777215</height></size></property>
+                                                            <property name="alignment"><set>Qt::AlignTop|Qt::AlignLeft</set></property>
+                                                        </widget>
+                                                    </item>
+                                                    <item>
+                                                        <widget class="QLabel" name="contourDiffVal">
+                                                            <property name="text"><string>—</string></property>
+                                                            <property name="wordWrap"><bool>true</bool></property>
+                                                            <property name="alignment"><set>Qt::AlignTop|Qt::AlignLeft</set></property>
+                                                        </widget>
+                                                    </item>
+                                                </layout>
+                                            </item>
+
+                                        </layout>
+                                    </widget>
+                                </item>
+
+                            </layout>
+                        </widget>
+                        <!-- ═══════════════════════════════════ end Snake tab ════════════════ -->
+
+                    </widget>
+                </item>
+            </layout>
+        </widget>
+        <widget class="QMenuBar" name="menubar">
+            <property name="geometry">
+                <rect><x>0</x><y>0</y><width>1280</width><height>22</height></rect>
+            </property>
+            <widget class="QMenu" name="menuFile">
+                <property name="title"><string>&amp;File</string></property>
+                <addaction name="actionOpenImage"/>
+                <addaction name="separator"/>
+                <addaction name="actionQuit"/>
+            </widget>
+            <widget class="QMenu" name="menuHelp">
+                <property name="title"><string>&amp;Help</string></property>
+                <addaction name="actionAbout"/>
+            </widget>
+            <addaction name="menuFile"/>
+            <addaction name="menuHelp"/>
+        </widget>
+        <widget class="QStatusBar" name="statusbar"/>
+        <action name="actionOpenImage">
+            <property name="text"><string>&amp;Open Image...</string></property>
+            <property name="shortcut"><string>Ctrl+O</string></property>
+        </action>
+        <action name="actionQuit">
+            <property name="text"><string>&amp;Quit</string></property>
+            <property name="shortcut"><string>Ctrl+Q</string></property>
+        </action>
+        <action name="actionAbout">
+            <property name="text"><string>&amp;About</string></property>
+        </action>
+    </widget>
+    <resources/>
+    <connections/>
+</ui>
